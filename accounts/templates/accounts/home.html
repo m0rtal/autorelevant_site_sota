@@ -1,0 +1,13 @@
+{% extends 'accounts/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+    <div>
+        <h1>Добро пожаловать!</h1>
+        <p>
+            <a class="btn btn-primary" href="{% url 'login' %}">Войти</a>
+            <a class="btn btn-secondary" href="{% url 'register' %}">Зарегистрироваться</a>
+        </p>
+    </div>
+</div>
+{% endblock %}
