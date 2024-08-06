@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
+from django.utils import timezone
 
 
 class CustomUserManager(BaseUserManager):
@@ -41,3 +42,16 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.user.email} - Profile"
+
+
+class UploadedFile(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    file = models.FileField(upload_to='uploads/')
+    google_region = models.CharField(max_length=255)
+    yandex_region = models.CharField(max_length=255)
+    uploaded_at = models.DateTimeField(default=timezone.now)
+    status = models.CharField(max_length=50, default='Обработка')
+    result = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.user.email} - {self.file.name}"

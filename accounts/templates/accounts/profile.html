@@ -6,7 +6,7 @@
     <div class="col-md-3">
         <ul class="list-group">
             <li class="list-group-item active">Меню</li>
-            <li class="list-group-item"><a href="#">История</a></li>
+            <li class="list-group-item"><a href="{% url 'history' %}">История</a></li>
             <li class="list-group-item"><a href="#">Настройки</a></li>
             <li class="list-group-item"><a href="#">Помощь</a></li>
         </ul>
@@ -15,16 +15,27 @@
         <h1>Добро пожаловать, {{ user.email }}!</h1>
         <p>Ваш баланс: {{ user.profile.balance }}</p>
 
-        <!-- Выпадающие списки для регионов -->
-        <div>
-            <label for="google-regions">Выбор региона (Google):</label>
-            <select id="google-regions"></select>
-        </div>
-
-        <div>
-            <label for="yandex-regions">Выбор региона (Yandex):</label>
-            <select id="yandex-regions"></select>
-        </div>
+        <!-- Форма загрузки файла -->
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="google-region">Выбор региона (Google):</label>
+                <select id="google-regions" name="google_region" class="form-control">
+                    <!-- Опции будут добавлены JavaScript -->
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="yandex-region">Выбор региона (Yandex):</label>
+                <select id="yandex-regions" name="yandex_region" class="form-control">
+                    <!-- Опции будут добавлены JavaScript -->
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="file">Загрузить файл:</label>
+                <input type="file" id="file" name="file" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Загрузить</button>
+        </form>
     </div>
 </div>
 
@@ -44,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     googleSelect.add(option);
                 }
             });
-            $(googleSelect).select2(); // Инициализация Select2 для Google
+            $(googleSelect).select2();
         });
 
     // Загружаем данные из JSON для Yandex
@@ -58,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 option.text = item.location;
                 yandexSelect.add(option);
             });
-            $(yandexSelect).select2(); // Инициализация Select2 для Yandex
+            $(yandexSelect).select2();
         });
 });
 </script>

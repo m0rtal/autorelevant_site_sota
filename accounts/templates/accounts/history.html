@@ -1,0 +1,33 @@
+{% extends 'accounts/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>История загрузок</h1>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Дата загрузки</th>
+                    <th>Файл</th>
+                    <th>Регион (Google)</th>
+                    <th>Регион (Yandex)</th>
+                    <th>Статус</th>
+                    <th>Результат</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for upload in uploads %}
+                <tr>
+                    <td>{{ upload.uploaded_at }}</td>
+                    <td>{{ upload.file.name }}</td>
+                    <td>{{ upload.google_region }}</td>
+                    <td>{{ upload.yandex_region }}</td>
+                    <td>{{ upload.status }}</td>
+                    <td>{{ upload.result }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
