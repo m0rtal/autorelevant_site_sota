@@ -1,4 +1,5 @@
 {% extends 'accounts/base.html' %}
+{% load static %}
 
 {% block content %}
 <div class="row">
@@ -6,26 +7,32 @@
         <h1>История загрузок</h1>
         <table class="table table-striped">
             <thead>
-                <tr>
-                    <th>Дата загрузки</th>
-                    <th>Файл</th>
-                    <th>Регион (Google)</th>
-                    <th>Регион (Yandex)</th>
-                    <th>Статус</th>
-                    <th>Результат</th>
-                </tr>
+            <tr>
+                <th>Дата загрузки</th>
+                <th>Файл</th>
+                <th>Регион (Google)</th>
+                <th>Регион (Yandex)</th>
+                <th>Статус</th>
+                <th>Результат</th>
+            </tr>
             </thead>
             <tbody>
-                {% for upload in uploads %}
-                <tr>
-                    <td>{{ upload.uploaded_at }}</td>
-                    <td>{{ upload.file.name }}</td>
-                    <td>{{ upload.google_region }}</td>
-                    <td>{{ upload.yandex_region }}</td>
-                    <td>{{ upload.status }}</td>
-                    <td>{{ upload.result }}</td>
-                </tr>
-                {% endfor %}
+            {% for upload in uploads %}
+            <tr>
+                <td>{{ upload.uploaded_at }}</td>
+                <td>{{ upload.file.name }}</td>
+                <td>{{ upload.google_region }}</td>
+                <td>{{ upload.yandex_region }}</td>
+                <td>{{ upload.status }}</td>
+                <td>
+                    {% if upload.result %}
+                    <a href="{{ MEDIA_URL }}{{ upload.result }}" download>Скачать результат</a>
+                    {% else %}
+                    {{ upload.result }}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
             </tbody>
         </table>
     </div>

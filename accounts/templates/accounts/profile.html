@@ -40,22 +40,31 @@
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    // Загружаем данные из CSV для Google
-    fetch("{% static 'dropdowns/geotargets-google.csv' %}")
-        .then(response => response.text())
-        .then(data => {
+    document.addEventListener("DOMContentLoaded", function() {
+        // Загружаем данные из CSV для Google
+        fetch("{% static 'dropdowns/geotargets-google.csv' %}")
+            .then(response => response.text())
+            .then(data => {
             const googleSelect = document.getElementById("google-regions");
+
+            // Регулярное выражение для правильного разбора строк с учетом кавычек
+            const parseCSV = (text) => {
+                const regex = /("([^"]|"")*")|([^,]+)/g;
+                return text.match(regex).map(item => item.replace(/^"|"$/g, '').replace(/""/g, '"'));
+            };
+
             data.split('\n').slice(1).forEach(row => {
-                const [criteriaId, , canonicalName] = row.split(',').map(cell => cell.replace(/"/g, ''));
-                if (criteriaId && canonicalName) {
+                const fields = parseCSV(row);
+                const canonicalName = fields[2]; // Третье поле - Canonical Name
+
+                if (canonicalName) {
                     const option = document.createElement("option");
-                    option.value = criteriaId;
+                    option.value = canonicalName;
                     option.text = canonicalName;
                     googleSelect.add(option);
                 }
             });
-            $(googleSelect).select2();
+            $(googleSelect).select2(); // Инициализация Select2
         });
 
     // Загружаем данные из JSON для Yandex

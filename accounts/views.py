@@ -1,9 +1,12 @@
 # from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+
+from avtorelevant_site import settings
 from .forms import CustomUserCreationForm
 from .forms import UploadFileForm
 from .models import UploadedFile
+from .tasks import FileProcessingThread
 import openpyxl
 
 def register(request):
@@ -34,18 +37,13 @@ def profile(request):
                 file=file,
                 google_region=google_region,
                 yandex_region=yandex_region,
+                status='Успешно загружен',
+                # result='Отправлен на обработку',
             )
 
-            # Обработка файла (пример)
-            try:
-                wb = openpyxl.load_workbook(uploaded_file.file)
-                # Обработка данных...
-                uploaded_file.status = 'Успешно'
-                uploaded_file.result = 'Результаты обработки...'
-            except Exception as e:
-                uploaded_file.status = 'Ошибка'
-                uploaded_file.result = str(e)
-            uploaded_file.save()
+            # Запуск фоновой задачи для обработки файла
+            processing_thread = FileProcessingThread(uploaded_file.id, google_region, yandex_region)
+            processing_thread.start()
 
             return redirect('profile')
     else:
@@ -56,7 +54,12 @@ def profile(request):
 @login_required
 def history(request):
     uploads = UploadedFile.objects.filter(user=request.user).order_by('-uploaded_at')
-    return render(request, 'accounts/history.html', {'uploads': uploads})
+    context = {
+        'uploads': uploads,
+        'MEDIA_URL': settings.MEDIA_URL,  # Добавляем MEDIA_URL в контекст
+    }
+    # return render(request, 'accounts/history.html', {'uploads': uploads})
+    return render(request, 'accounts/history.html', context)
 
 
 def home(request):
