@@ -2,3 +2,5 @@ django
 django-bootstrap5
 openpyxl
 pandas
+asyncio
+aiohttp
