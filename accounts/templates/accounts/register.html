@@ -4,10 +4,27 @@
 <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
     <div class="card" style="width: 30rem;">
         <div class="card-body">
-            <h5 class="card-title">Зарегистрироваться</h5>
+            <h5 class="card-title">Заполните форму регистрации</h5>
             <form method="post">
                 {% csrf_token %}
-                {{ form.as_p }}
+                {% if form.non_field_errors %}
+                    <div>{{ form.non_field_errors }}</div>
+                {% endif %}
+                {% for field in form %}
+                    <div class="form-group mb-3">
+                        {{ field.label_tag }}
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="invalid-feedback">
+                                {{ field.errors }}
+                            </div>
+                        {% else %}
+                            {% if field.help_text %}
+                                <small class="form-text text-muted">{{field.help_text}}</small>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                {% endfor %}
                 <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
             </form>
         </div>

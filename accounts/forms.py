@@ -9,6 +9,13 @@ class CustomUserCreationForm(UserCreationForm):
         model = CustomUser
         fields = ('email',)  # или другие поля, которые вы хотите включить
 
+    def __init__(self, *args, **kwargs):
+        super(UserCreationForm, self).__init__(*args, **kwargs)
+        for field_name in self.fields:
+            if self.has_error(field_name):
+                self.fields[field_name].widget.attrs["class"] = "form-control is-invalid"
+            else:
+                self.fields[field_name].widget.attrs["class"] = "form-control"
 
 class UploadFileForm(forms.Form):
     google_region = forms.CharField(max_length=100, label='Google Region')
