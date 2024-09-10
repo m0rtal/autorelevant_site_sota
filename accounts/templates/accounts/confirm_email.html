@@ -1,0 +1,31 @@
+{% extends 'accounts/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+    <div class="card" style="width: 30rem;">
+        <div class="card-body">
+            {% if send_error %}
+                <h5 class="card-title">
+                    Ошибка отправки письма
+                </h5>
+                <p> Пожалуйста, попробуйте снова позже.</p>
+            {% else %}
+            <h5 class="card-title">Подтвердите адрес электронной почты</h5>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group mb-3">
+                    <label for="validationServer01">Код подтверждения:</label>
+                    <input type="text" class="form-control {% if wrong_code %}is-invalid{% endif %}" id="code" name="code" placeholder="Введите код из письма" value="" required>
+                    {% if wrong_code %}
+                    <div class="invalid-feedback">
+                        Неверный код подтверждения. Пожалуйста, проверьте введенные данные
+                    </div>
+                    {% endif %}
+                </div>
+                <button type="submit" class="btn btn-primary">Проверить код</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
