@@ -18,7 +18,10 @@
                             <a class="nav-link" href="{% url 'profile' %}">Профиль</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'logout' %}">Выйти</a>
+                            <form method="post" action="{% url 'logout' %}">
+                                {% csrf_token %}
+                                <button class="nav-link" type="submit">Выйти</button>
+                            </form>
                         </li>
                     {% else %}
                         <li class="nav-item">
